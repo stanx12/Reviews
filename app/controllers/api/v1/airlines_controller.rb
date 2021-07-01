@@ -21,7 +21,7 @@ class Api::V1::AirlinesController < ApplicationController
   private
 
   def find_airline
-    @airline = Airline.find_by(slug: params[:slug])
+    @airline = Airline.find_by!(slug: params[:slug])
   end
 
   def include_reviews?
