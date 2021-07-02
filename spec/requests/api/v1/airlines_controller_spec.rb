@@ -32,7 +32,7 @@ RSpec.describe '/api/v1/airlines', type: :request do
     end
   end
   
-  describe 'SHOW /api/v1/airline/:slug' do
+  describe 'GET SINGLE /api/v1/airline/:slug' do
     it 'should return the correct airline with status code 200' do
       get "/api/v1/airlines/#{@airline.slug}"
 
@@ -52,8 +52,76 @@ RSpec.describe '/api/v1/airlines', type: :request do
       expect(json['data']['reviews'].length).to eq(3)
     end
 
-    it 'should return 403 if the airline does not exists' do
-      
+    it 'should return 404 if the airline does not exists' do
+      get '/api/v1/airlines/not-exists'
+
+      expect(response).to have_http_status(404)
+      expect(json['errors'].size).to eq(1)
+      expect(json['errors'][0]['resource']).to eq('/api/v1/airlines/not-exists')
+    end
+  end
+
+  describe 'POST /api/v1/airline' do
+    it 'should return the recently created airline' do
+      params = {
+        data: {
+          name: "The Stones Airline",
+          image_url: "https://ibb.co/0rHq1TZ"
+        }
+      }
+
+      post '/api/v1/airlines', params: params
+
+      expect(response).to have_http_status(200)
+      expect(json['data']['name']).to eq('The Stones Airline')
+      expect(json['data']['slug']).to eq('the-stones-airline')
+      expect(json['data']['score']).to eq(0.0)
+    end
+
+    it 'should return 500 error if we do not pass valid params' do
+      params = {
+        data: {}
+      }
+
+      post '/api/v1/airlines', params: params
+
+      expect(response).to have_http_status(500)
+      expect(json['errors'].size).to eq(1)
+      expect(json['errors'][0]['code']).to eq(500)
+      expect(json['errors'][0]['resource']).to eq('/api/v1/airlines')
+      expect(json['errors'][0]['message']).to_not be_empty
+    end
+  end
+
+  describe 'PATCH /api/v1/airline/:slug' do
+    it 'should return the updated record' do
+      params = {
+        data: {
+          name: 'The Rolling Stones Airlines'
+        }
+      }
+
+      patch '/api/v1/airlines/test-airline', params: params
+
+      expect(response).to have_http_status(200)
+      expect(json['data']['id']).to_not be_nil
+      expect(json['data']['name']).to eq('The Rolling Stones Airlines')
+      expect(json['data']['slug']).to eq('test-airline')
+      expect(json['data']['score']).to eq(0.0)
+    end
+
+    it 'should return 500 error if we do not pass valid params' do
+      params = {
+        data: {}
+      }
+
+      patch '/api/v1/airlines/test-airline', params: params
+
+      expect(response).to have_http_status(500)
+      expect(json['errors'].size).to eq(1)
+      expect(json['errors'][0]['code']).to eq(500)
+      expect(json['errors'][0]['resource']).to eq('/api/v1/airlines/test-airline')
+      expect(json['errors'][0]['message']).to_not be_empty
     end
   end
 end
