@@ -8,7 +8,7 @@ class Airline < ApplicationRecord
   has_many :reviews
 
   def avg_score
-    return 0.round(2) if reviews.empty?
+    return 0.round(2) unless reviews.size.positive?
 
     reviews.average(:score)
            .round(2)

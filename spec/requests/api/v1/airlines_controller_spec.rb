@@ -16,6 +16,7 @@ RSpec.describe '/api/v1/airlines', type: :request do
       expect(airline_with_comments['name']).to eq('Test Airline with reviews')
       expect(airline_with_comments['slug']).to eq('test-airline-with-reviews')
       expect(airline_with_comments['score']).to eq(2.0)
+      expect(airline_with_comments['image_url']).to eq('http://test.com/image_test')
       expect(response).to have_http_status(200)
     end
 
@@ -27,6 +28,7 @@ RSpec.describe '/api/v1/airlines', type: :request do
       expect(airline_with_comments['name']).to eq('Test Airline with reviews')
       expect(airline_with_comments['slug']).to eq('test-airline-with-reviews')
       expect(airline_with_comments['score']).to eq(2.0)
+      expect(airline_with_comments['image_url']).to eq('http://test.com/image_test')
       expect(airline_with_comments['reviews'].length).to eq(3)
       expect(response).to have_http_status(200)
     end
