@@ -71,7 +71,6 @@ const Airline = () => {
         console.log(airline.reviews.map(airline => airline.score).reduce((acc, val) => acc + val, 0), airline.reviews.length);
         const updatedScore = updatedReviews.map(airline => airline.score).reduce((acc, val) => acc + val, 0) / updatedReviews.length;
 
-        debugger;
         setAirline({
           ...airline,
           reviews: updatedReviews,
